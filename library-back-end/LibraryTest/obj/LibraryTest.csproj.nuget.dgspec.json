@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj": {}
+    "c:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj": {}
   },
   "projects": {
-    "C:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj": {
+    "c:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj",
+        "projectUniqueName": "c:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj",
         "projectName": "LibraryTest",
-        "projectPath": "C:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj",
+        "projectPath": "c:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\LibraryTest.csproj",
         "packagesPath": "C:\\Users\\admin\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\obj\\",
+        "outputPath": "c:\\Users\\admin\\Desktop\\NashTech\\MidAssignment\\Library-Management\\library-back-end\\LibraryTest\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

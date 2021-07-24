@@ -9,10 +9,6 @@ namespace LibraryAPI.Models
     [Table("BookeBorrowingRequestDetails")]
     public class BookeBorrowingRequestDetails
     {
-        [Key]
-        public int ID { get; set; }
-
-        public string BookName { get; set; }
         
     }
 }

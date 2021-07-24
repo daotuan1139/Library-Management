@@ -9,10 +9,6 @@ namespace LibraryAPI.Models
     [Table("User")]
     public class User
     {
-        [Key]
-        public int ID { get; set; }
-
-        public string UserName { get; set; }
-        
+ 
     }
 }
