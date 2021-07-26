@@ -9,6 +9,11 @@ namespace LibraryAPI.Models
     [Table("User")]
     public class User
     {
- 
+        [Key]
+        public int UserID { get; set; }
+        public string UserName { get; set; }
+
+        public ICollection<BookBorrowingRequestDetail> BorrowingRequestDetails { get; set; }
+
     }
 }
