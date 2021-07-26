@@ -9,6 +9,9 @@ namespace LibraryAPI.Models
     [Table("Category")]
     public class Category
     {
+        [Key]
+        public int CategoryID { get; set; }
+        public string CategoryName { get; set; }
         
     }
 }

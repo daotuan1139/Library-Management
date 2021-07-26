@@ -10,7 +10,7 @@ namespace LibraryAPI.Models
     public class Book
     {
         [Key]
-        public int ID { get; set; }
+        public int BookID { get; set; }
 
         public string BookName { get; set; }
         
