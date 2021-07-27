@@ -11,9 +11,9 @@ namespace LibraryAPI.Services
         interface IBookService
         {   
             IEnumerable<Book> GetList();
-            Book CreateBook(Book book);
-            List<Book> EditBook(Book book);
-            List<Book> IsDelete(Book book);
+            Book CreateBook(BookDTO book);
+            List<Book> EditBook(BookDTO book);
+            List<Book> DeleteBook(BookDTO book);
             Book FindByID(int id);
 
         }
@@ -23,7 +23,7 @@ namespace LibraryAPI.Services
             IEnumerable<Category> GetCategories();
             Category CreateCategory(Category category);
             List<Category> EditCategory(Category category);
-            List<Category> IsDelete(Category category);
+            List<Category> DeleteCategory(Category category);
             Category FindByID(int id);
         }
 

@@ -12,13 +12,13 @@ namespace LibraryAPI.Models
         [Key]
         public int BookBorrowingRequestID { get; set; }
 
-        public string UserRequest { get; set; }
+        public string NormalUserRequest { get; set; }
 
         public DateTime DateRequest { get; set; }
 
         public string status { get; set; }
 
-        public bool AdminApproved { get; set; }
+        public string AdminApproved { get; set; }
 
         public ICollection<BookBorrowingRequestDetail> BorrowingRequestDetails { get; set; }
     }

@@ -15,22 +15,53 @@ namespace LibraryAPI.Models
             modelBuilder.Entity<Category>().Property(c => c.CategoryID).ValueGeneratedOnAdd();
             modelBuilder.Entity<BookBorrowingRequest>().Property(c => c.BookBorrowingRequestID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Book>().Property(c => c.BookID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<User>().Property(c => c.UserID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<BookBorrowingRequestDetail>().HasKey(d => new { d.BookBorrowingRequestID, d.UserID });
+            modelBuilder.Entity<NormalUser>().Property(c => c.NormalUserID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<SuperUser>().Property(c => c.SuperUserID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<BookBorrowingRequestDetail>().HasKey(d => new { d.BookBorrowingRequestID, d.BookID });
 
             modelBuilder.Entity<BookBorrowingRequestDetail>()
-                .HasOne(bc => bc.User)
+                .HasOne(bc => bc.Book)
                 .WithMany(b => b.BorrowingRequestDetails)
-                .HasForeignKey(bc => bc.UserID);
+                .HasForeignKey(bc => bc.BookID)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .IsRequired();
 
             modelBuilder.Entity<BookBorrowingRequestDetail>()
                 .HasOne(bc => bc.BookBorrowingRequest)
                 .WithMany(b => b.BorrowingRequestDetails)
-                .HasForeignKey(bc => bc.BookBorrowingRequestID);
+                .HasForeignKey(bc => bc.BookBorrowingRequestID)
+                .OnDelete(DeleteBehavior.ClientCascade)
+                .IsRequired();
+
+            modelBuilder.Entity<Book>().HasData(new Book
+            {
+                BookID = 1,
+                BookName = "Book 1", 
+            });
+            modelBuilder.Entity<Category>().HasData(new Category
+            {
+                CategoryID = 1,
+                CategoryName = "Category 1", 
+            });
+            modelBuilder.Entity<NormalUser>().HasData(new NormalUser
+            {
+                NormalUserID = 1,
+                NormalUserEmail = "1",
+                NormalUserPassword = "1",
+                NormalUserName = "user 1", 
+            });
+            modelBuilder.Entity<SuperUser>().HasData(new SuperUser
+            {
+                SuperUserID = 1,
+                SuperUserEmail = "1",
+                SuperUserPassword = "1",
+                SuperUserName = "admin 1", 
+            });
 
         }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<User> Users { get; set; }
+        public DbSet<NormalUser> NormalUsers { get; set; }
+        public DbSet<SuperUser> SuperUsers { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookBorrowingRequest> BookBorrowingRequests { get; set; }
         public DbSet<BookBorrowingRequestDetail> BookBorrowingRequestDetails { get; set; }

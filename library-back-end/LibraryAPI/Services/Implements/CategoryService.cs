@@ -24,47 +24,83 @@ namespace LibraryAPI.Services
         }
         public Category CreateCategory(Category category)
         {
-            var newCategory = new Category
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
+            {
+                var newCategory = new Category
                 {
-                   CategoryName = category.CategoryName,
+                    CategoryName = category.CategoryName,
                 };
-            _libraryContext.Categories.Add(newCategory);
-            _libraryContext.SaveChanges();
+                _libraryContext.Categories.Add(newCategory);
+                _libraryContext.SaveChanges();
+                transaction.Commit();
 
-            return newCategory;
+                return newCategory;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public List<Category> EditCategory(Category category)
         {
-            Category existingCategory = _libraryContext.Categories.Find(category.CategoryID);
-
-            if (existingCategory == null)
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
             {
-                return new List<Category>();
-            }
-            else
-            {
-                existingCategory.CategoryName = category.CategoryName;
+                var existingCategory = _libraryContext.Categories.Find(category.CategoryID);
 
-                _libraryContext.Entry(existingCategory).State = EntityState.Modified;
-                _libraryContext.SaveChanges();
+                if (existingCategory == null)
+                {
+                    return new List<Category>();
+                }
+                else
+                {
+                    existingCategory.CategoryName = category.CategoryName;
+
+                    _libraryContext.Entry(existingCategory).State = EntityState.Modified;
+                    _libraryContext.SaveChanges();
+                    transaction.Commit();
+                }
+                return _libraryContext.Categories.ToList();
             }
-            return _libraryContext.Categories.ToList();
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public Category FindByID(int id)
         {
-            Category existingCategory = _libraryContext.Categories.Find(id);
+            var existingCategory = _libraryContext.Categories.Find(id);
 
             return existingCategory;
         }
 
-        public List<Category> IsDelete(Category category)
+        public List<Category> DeleteCategory(Category category)
         {
-             Category existingCategory = _libraryContext.Categories.Find(category.CategoryID);
-            _libraryContext.Remove(existingCategory);
-            _libraryContext.SaveChanges();
-            return _libraryContext.Categories.ToList();
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
+            {
+                var existingCategory = _libraryContext.Categories.Find(category.CategoryID);
+                if (existingCategory != null)
+                {
+                    _libraryContext.Remove(existingCategory);
+                    _libraryContext.SaveChanges();
+                    transaction.Commit();
+                    return _libraryContext.Categories.ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 

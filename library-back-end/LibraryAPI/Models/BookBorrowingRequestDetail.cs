@@ -9,8 +9,9 @@ namespace LibraryAPI.Models
     [Table("BookBorrowingRequestDetail")]
     public class BookBorrowingRequestDetail
     {   
-        public int UserID { get; set; } 
-        public User User {get; set;}
+        public int BookID { get; set; } 
+        public int? number { get; set; }
+        public Book Book {get; set;}
         public int BookBorrowingRequestID { get; set; }
         public BookBorrowingRequest BookBorrowingRequest {get; set;}
     }

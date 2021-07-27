@@ -32,6 +32,13 @@ namespace LibraryAPI.Migrations
                     b.HasKey("BookID");
 
                     b.ToTable("Book");
+
+                    b.HasData(
+                        new
+                        {
+                            BookID = 1,
+                            BookName = "Book 1"
+                        });
                 });
 
             modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequest", b =>
@@ -41,13 +48,13 @@ namespace LibraryAPI.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<bool>("AdminApproved")
-                        .HasColumnType("bit");
+                    b.Property<string>("AdminApproved")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("DateRequest")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("UserRequest")
+                    b.Property<string>("NormalUserRequest")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("status")
@@ -63,12 +70,15 @@ namespace LibraryAPI.Migrations
                     b.Property<int>("BookBorrowingRequestID")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserID")
+                    b.Property<int>("BookID")
                         .HasColumnType("int");
 
-                    b.HasKey("BookBorrowingRequestID", "UserID");
+                    b.Property<int?>("number")
+                        .HasColumnType("int");
 
-                    b.HasIndex("UserID");
+                    b.HasKey("BookBorrowingRequestID", "BookID");
+
+                    b.HasIndex("BookID");
 
                     b.ToTable("BookBorrowingRequestDetail");
                 });
@@ -86,21 +96,73 @@ namespace LibraryAPI.Migrations
                     b.HasKey("CategoryID");
 
                     b.ToTable("Category");
+
+                    b.HasData(
+                        new
+                        {
+                            CategoryID = 1,
+                            CategoryName = "Category 1"
+                        });
                 });
 
-            modelBuilder.Entity("LibraryAPI.Models.User", b =>
+            modelBuilder.Entity("LibraryAPI.Models.NormalUser", b =>
                 {
-                    b.Property<int>("UserID")
+                    b.Property<int>("NormalUserID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("NormalUserEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("UserID");
+                    b.Property<string>("NormalUserName")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("User");
+                    b.Property<string>("NormalUserPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("NormalUserID");
+
+                    b.ToTable("NormalUser");
+
+                    b.HasData(
+                        new
+                        {
+                            NormalUserID = 1,
+                            NormalUserEmail = "1",
+                            NormalUserName = "user 1",
+                            NormalUserPassword = "1"
+                        });
+                });
+
+            modelBuilder.Entity("LibraryAPI.Models.SuperUser", b =>
+                {
+                    b.Property<int>("SuperUserID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("SuperUserEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SuperUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SuperUserPassword")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("SuperUserID");
+
+                    b.ToTable("SuperlUser");
+
+                    b.HasData(
+                        new
+                        {
+                            SuperUserID = 1,
+                            SuperUserEmail = "1",
+                            SuperUserName = "admin 1",
+                            SuperUserPassword = "1"
+                        });
                 });
 
             modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequestDetail", b =>
@@ -108,26 +170,26 @@ namespace LibraryAPI.Migrations
                     b.HasOne("LibraryAPI.Models.BookBorrowingRequest", "BookBorrowingRequest")
                         .WithMany("BorrowingRequestDetails")
                         .HasForeignKey("BookBorrowingRequestID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
 
-                    b.HasOne("LibraryAPI.Models.User", "User")
+                    b.HasOne("LibraryAPI.Models.Book", "Book")
                         .WithMany("BorrowingRequestDetails")
-                        .HasForeignKey("UserID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .HasForeignKey("BookID")
+                        .OnDelete(DeleteBehavior.ClientCascade)
                         .IsRequired();
+
+                    b.Navigation("Book");
 
                     b.Navigation("BookBorrowingRequest");
-
-                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequest", b =>
+            modelBuilder.Entity("LibraryAPI.Models.Book", b =>
                 {
                     b.Navigation("BorrowingRequestDetails");
                 });
 
-            modelBuilder.Entity("LibraryAPI.Models.User", b =>
+            modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequest", b =>
                 {
                     b.Navigation("BorrowingRequestDetails");
                 });

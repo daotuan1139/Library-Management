@@ -10,7 +10,6 @@ namespace LibraryAPI.Services
 
     public class BookService : IBookService
     {
-
         private LibraryContext _libraryContext;
         public BookService(LibraryContext libraryContext)
         {
@@ -21,52 +20,88 @@ namespace LibraryAPI.Services
 
         public IEnumerable<Book> GetList()
         {
-             return _libraryContext.Books.ToList();
+            return _libraryContext.Books.ToList();
         }
-
-        public Book CreateBook(Book book)
+        public Book CreateBook(BookDTO book)
         {
-            var newBook = new Book
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
+            {
+                var newBook = new Book
                 {
                     BookName = book.BookName,
                 };
-            _libraryContext.Books.Add(newBook);
-            _libraryContext.SaveChanges();
+                _libraryContext.Books.Add(newBook);
+                _libraryContext.SaveChanges();
+                transaction.Commit();
+                
+                return newBook;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
 
-            return newBook;
         }
 
-        public List<Book> EditBook(Book book)
+        public List<Book> EditBook(BookDTO book)
         {
-            Book existingBook = _libraryContext.Books.Find(book.BookID);
-
-            if (existingBook == null)
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
             {
-                return new List<Book>();
-            }
-            else
-            {
-                existingBook.BookName = book.BookName;
+                var existingBook = _libraryContext.Books.Find(book.BookID);
 
-                _libraryContext.Entry(existingBook).State = EntityState.Modified;
-                _libraryContext.SaveChanges();
+                if (existingBook == null)
+                {
+                    return null;
+                }
+                else
+                {
+                    existingBook.BookName = book.BookName;
+
+                    _libraryContext.Entry(existingBook).State = EntityState.Modified;
+                    _libraryContext.SaveChanges();
+                    transaction.Commit();
+                }
+                return _libraryContext.Books.ToList();
             }
-            return _libraryContext.Books.ToList();
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
         public Book FindByID(int id)
         {
-            Book existingBook = _libraryContext.Books.Find(id);
+            var existingBook = _libraryContext.Books.Find(id);
 
             return existingBook;
         }
 
-        public List<Book> IsDelete(Book book)
+        public List<Book> DeleteBook(BookDTO book)
         {
-            Book existingBook = _libraryContext.Books.Find(book.BookID);
-            _libraryContext.Remove(existingBook);
-            _libraryContext.SaveChanges();
-            return _libraryContext.Books.ToList();
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
+            {
+                var existingBook = _libraryContext.Books.Find(book.BookID);
+                if (existingBook != null)
+                {
+                    _libraryContext.Remove(existingBook);
+                    _libraryContext.SaveChanges();
+                    transaction.Commit();
+                    return _libraryContext.Books.ToList();
+                }
+                else
+                {
+                    return null;
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
     }
 
