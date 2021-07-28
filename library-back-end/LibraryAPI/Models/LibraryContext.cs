@@ -15,8 +15,7 @@ namespace LibraryAPI.Models
             modelBuilder.Entity<Category>().Property(c => c.CategoryID).ValueGeneratedOnAdd();
             modelBuilder.Entity<BookBorrowingRequest>().Property(c => c.BookBorrowingRequestID).ValueGeneratedOnAdd();
             modelBuilder.Entity<Book>().Property(c => c.BookID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<NormalUser>().Property(c => c.NormalUserID).ValueGeneratedOnAdd();
-            modelBuilder.Entity<SuperUser>().Property(c => c.SuperUserID).ValueGeneratedOnAdd();
+            modelBuilder.Entity<User>().Property(c => c.UserID).ValueGeneratedOnAdd();
             modelBuilder.Entity<BookBorrowingRequestDetail>().HasKey(d => new { d.BookBorrowingRequestID, d.BookID });
 
             modelBuilder.Entity<BookBorrowingRequestDetail>()
@@ -36,32 +35,22 @@ namespace LibraryAPI.Models
             modelBuilder.Entity<Book>().HasData(new Book
             {
                 BookID = 1,
-                BookName = "Book 1", 
+                BookName = "Book 1",
             });
             modelBuilder.Entity<Category>().HasData(new Category
             {
                 CategoryID = 1,
-                CategoryName = "Category 1", 
+                CategoryName = "Category 1",
             });
-            modelBuilder.Entity<NormalUser>().HasData(new NormalUser
-            {
-                NormalUserID = 1,
-                NormalUserEmail = "1",
-                NormalUserPassword = "1",
-                NormalUserName = "user 1", 
-            });
-            modelBuilder.Entity<SuperUser>().HasData(new SuperUser
-            {
-                SuperUserID = 1,
-                SuperUserEmail = "1",
-                SuperUserPassword = "1",
-                SuperUserName = "admin 1", 
-            });
-
+            modelBuilder.Entity<User>().HasData(
+                new User { UserID = 1, UserName = "daotuan", UserEmail = "daotuan1@gmail.com", UserPassword = "123123", RoleAdmin = true},
+                new User { UserID = 2, UserName = "dao", UserEmail = "daotuan2@gmail.com", UserPassword = "123123", RoleAdmin = true},
+                new User { UserID = 3, UserName = "anh", UserEmail = "daotuan3@gmail.com", UserPassword = "123123", RoleAdmin = false},
+                new User { UserID = 4, UserName = "tuan", UserEmail = "daotuan4@gmail.com", UserPassword = "123123", RoleAdmin = false}
+                );
         }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<NormalUser> NormalUsers { get; set; }
-        public DbSet<SuperUser> SuperUsers { get; set; }
+        public DbSet<User> Users { get; set; }
         public DbSet<Book> Books { get; set; }
         public DbSet<BookBorrowingRequest> BookBorrowingRequests { get; set; }
         public DbSet<BookBorrowingRequestDetail> BookBorrowingRequestDetails { get; set; }

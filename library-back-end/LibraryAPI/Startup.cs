@@ -20,6 +20,7 @@ namespace LibraryAPI
 {
     public class Startup
     {
+        private readonly string MyAllowSpecificOrigins = "";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,8 +34,21 @@ namespace LibraryAPI
             string con = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<LibraryContext>(options => options.UseSqlServer(con));
 
-            services.AddTransient<IBookService, BookService>();;
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  builder =>
+                                  {
+                                      builder.WithOrigins("http://localhost:3000")
+                                                          .AllowAnyHeader()
+                                                          .AllowAnyMethod();
+                                  });
+            });
+
+            services.AddTransient<IUserService, UserService>(); ;
+            services.AddTransient<IBookService, BookService>(); ;
             services.AddTransient<ICategoryService, CategoryService>();
+            services.AddTransient<IBookBorrowingRequestService, BookBorrowingRequestService>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -53,9 +67,12 @@ namespace LibraryAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryAPI v1"));
             }
 
+
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
 

@@ -15,50 +15,123 @@ namespace LibraryAPI.Controllers
     public class BookController : ControllerBase
     {
         private IBookService _bookService;
-
+        private IUserService _userService;
         private readonly ILogger<BookController> _logger;
 
-        public BookController(IBookService bookService, ILogger<BookController> logger)
+        public BookController(IBookService bookService,IUserService userService ,ILogger<BookController> logger)
         {
             _bookService = bookService;
+            _userService = userService;
             _logger = logger;
         }
 
         [HttpGet("Book")]
-        public IEnumerable<Book> GetBooks()
+        public IActionResult GetBooks()
         {
-            return _bookService.GetList();
+            var bookList = _bookService.GetList();
+            if (bookList == null)
+            {
+                return BadRequest("Error Loading");
+            }
+            return Ok(bookList);
         }
 
         [HttpPost("Book")]
-        public IActionResult AddBook(BookDTO Book)
+        public IActionResult AddBook(BookDTO book)
         {
-            var add = _bookService.CreateBook(Book);
-            if (add == null)
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-            return Ok(add);
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (book != null)
+                    {
+                        _bookService.CreateBook(book);
+                        return Ok(book);
+                    }
+                    return BadRequest("Error adding book");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            }
         }
 
         [HttpPut("Book")]
-        public List<Book> UpdateBook(BookDTO Book)
+        public IActionResult UpdateBook(BookDTO book)
         {
-            var update = _bookService.EditBook(Book);
-            return update;
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (book != null)
+                    {
+                        _bookService.EditBook(book);
+                        return Ok(book);
+                    }
+                    return BadRequest("Error editing book");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            }
         }
 
         [HttpGet("Book/{id}")]
-        public Book FindByIDBook(int id)
+        public IActionResult FindByIDBook(int id)
         {
-            return _bookService.FindByID(id);
+            var book = _bookService.FindByID(id);
+            if (book != null)
+            {
+                return BadRequest("Not Found :" + id);
+            }
+            return Ok(book);
         }
 
         [HttpDelete("Book")]
-        public List<Book> IsDeleteBook(BookDTO book)
+        public IActionResult DeleteBook(BookDTO book)
         {
-            var list = _bookService.DeleteBook(book);
-            return list;
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (book != null)
+                    {
+                        _bookService.EditBook(book);
+                        return Ok(book);
+                    }
+                    return BadRequest("Error deleting book");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            }
         }
         
     }

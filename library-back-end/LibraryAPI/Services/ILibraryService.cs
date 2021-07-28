@@ -27,6 +27,17 @@ namespace LibraryAPI.Services
             Category FindByID(int id);
         }
 
+        interface IBookBorrowingRequestService{
+
+            IEnumerable<BookBorrowingRequest> GetBookBorrowingRequest();
+            List<BookBorrowingRequest> EditBookBorrowingRequest(BookBorrowingRequestDTO request);
+            BookBorrowingRequest FindByID(int id);
+        }
+
+        interface IUserService{
+            IEnumerable<User> GetUsers();
+        }
+
     }
 
 }

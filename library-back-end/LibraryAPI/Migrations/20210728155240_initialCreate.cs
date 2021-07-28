@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace LibraryAPI.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,22 +21,6 @@ namespace LibraryAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BookBorrowingRequest",
-                columns: table => new
-                {
-                    BookBorrowingRequestID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    NormalUserRequest = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DateRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    status = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AdminApproved = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookBorrowingRequest", x => x.BookBorrowingRequestID);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
                 {
@@ -50,33 +34,41 @@ namespace LibraryAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "NormalUser",
+                name: "User",
                 columns: table => new
                 {
-                    NormalUserID = table.Column<int>(type: "int", nullable: false)
+                    UserID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    NormalUserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalUserPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    NormalUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    RoleAdmin = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_NormalUser", x => x.NormalUserID);
+                    table.PrimaryKey("PK_User", x => x.UserID);
                 });
 
             migrationBuilder.CreateTable(
-                name: "SuperlUser",
+                name: "BookBorrowingRequest",
                 columns: table => new
                 {
-                    SuperUserID = table.Column<int>(type: "int", nullable: false)
+                    BookBorrowingRequestID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    SuperUserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SuperUserPassword = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SuperUserName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    UserID = table.Column<int>(type: "int", nullable: false),
+                    DateRequest = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AdminApproved = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_SuperlUser", x => x.SuperUserID);
+                    table.PrimaryKey("PK_BookBorrowingRequest", x => x.BookBorrowingRequestID);
+                    table.ForeignKey(
+                        name: "FK_BookBorrowingRequest_User_UserID",
+                        column: x => x.UserID,
+                        principalTable: "User",
+                        principalColumn: "UserID",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,14 +107,20 @@ namespace LibraryAPI.Migrations
                 values: new object[] { 1, "Category 1" });
 
             migrationBuilder.InsertData(
-                table: "NormalUser",
-                columns: new[] { "NormalUserID", "NormalUserEmail", "NormalUserName", "NormalUserPassword" },
-                values: new object[] { 1, "1", "user 1", "1" });
+                table: "User",
+                columns: new[] { "UserID", "RoleAdmin", "UserEmail", "UserName", "UserPassword" },
+                values: new object[,]
+                {
+                    { 1, true, "daotuan1@gmail.com", "daotuan", "123123" },
+                    { 2, true, "daotuan2@gmail.com", "dao", "123123" },
+                    { 3, false, "daotuan3@gmail.com", "anh", "123123" },
+                    { 4, false, "daotuan4@gmail.com", "tuan", "123123" }
+                });
 
-            migrationBuilder.InsertData(
-                table: "SuperlUser",
-                columns: new[] { "SuperUserID", "SuperUserEmail", "SuperUserName", "SuperUserPassword" },
-                values: new object[] { 1, "1", "admin 1", "1" });
+            migrationBuilder.CreateIndex(
+                name: "IX_BookBorrowingRequest_UserID",
+                table: "BookBorrowingRequest",
+                column: "UserID");
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookBorrowingRequestDetail_BookID",
@@ -139,16 +137,13 @@ namespace LibraryAPI.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "NormalUser");
-
-            migrationBuilder.DropTable(
-                name: "SuperlUser");
-
-            migrationBuilder.DropTable(
                 name: "Book");
 
             migrationBuilder.DropTable(
                 name: "BookBorrowingRequest");
+
+            migrationBuilder.DropTable(
+                name: "User");
         }
     }
 }

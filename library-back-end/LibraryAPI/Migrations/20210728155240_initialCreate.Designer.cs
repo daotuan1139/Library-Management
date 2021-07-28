@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LibraryAPI.Migrations
 {
     [DbContext(typeof(LibraryContext))]
-    [Migration("20210727114611_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20210728155240_initialCreate")]
+    partial class initialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -56,13 +56,15 @@ namespace LibraryAPI.Migrations
                     b.Property<DateTime>("DateRequest")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("NormalUserRequest")
+                    b.Property<string>("Status")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("status")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("UserID")
+                        .HasColumnType("int");
 
                     b.HasKey("BookBorrowingRequestID");
+
+                    b.HasIndex("UserID");
 
                     b.ToTable("BookBorrowingRequest");
                 });
@@ -107,64 +109,73 @@ namespace LibraryAPI.Migrations
                         });
                 });
 
-            modelBuilder.Entity("LibraryAPI.Models.NormalUser", b =>
+            modelBuilder.Entity("LibraryAPI.Models.User", b =>
                 {
-                    b.Property<int>("NormalUserID")
+                    b.Property<int>("UserID")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("NormalUserEmail")
+                    b.Property<bool>("RoleAdmin")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserEmail")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalUserName")
+                    b.Property<string>("UserName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalUserPassword")
+                    b.Property<string>("UserPassword")
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("NormalUserID");
+                    b.HasKey("UserID");
 
-                    b.ToTable("NormalUser");
+                    b.ToTable("User");
 
                     b.HasData(
                         new
                         {
-                            NormalUserID = 1,
-                            NormalUserEmail = "1",
-                            NormalUserName = "user 1",
-                            NormalUserPassword = "1"
+                            UserID = 1,
+                            RoleAdmin = true,
+                            UserEmail = "daotuan1@gmail.com",
+                            UserName = "daotuan",
+                            UserPassword = "123123"
+                        },
+                        new
+                        {
+                            UserID = 2,
+                            RoleAdmin = true,
+                            UserEmail = "daotuan2@gmail.com",
+                            UserName = "dao",
+                            UserPassword = "123123"
+                        },
+                        new
+                        {
+                            UserID = 3,
+                            RoleAdmin = false,
+                            UserEmail = "daotuan3@gmail.com",
+                            UserName = "anh",
+                            UserPassword = "123123"
+                        },
+                        new
+                        {
+                            UserID = 4,
+                            RoleAdmin = false,
+                            UserEmail = "daotuan4@gmail.com",
+                            UserName = "tuan",
+                            UserPassword = "123123"
                         });
                 });
 
-            modelBuilder.Entity("LibraryAPI.Models.SuperUser", b =>
+            modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequest", b =>
                 {
-                    b.Property<int>("SuperUserID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.HasOne("LibraryAPI.Models.User", "User")
+                        .WithMany("BookBorrowingRequests")
+                        .HasForeignKey("UserID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Property<string>("SuperUserEmail")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SuperUserName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("SuperUserPassword")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("SuperUserID");
-
-                    b.ToTable("SuperlUser");
-
-                    b.HasData(
-                        new
-                        {
-                            SuperUserID = 1,
-                            SuperUserEmail = "1",
-                            SuperUserName = "admin 1",
-                            SuperUserPassword = "1"
-                        });
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequestDetail", b =>
@@ -194,6 +205,11 @@ namespace LibraryAPI.Migrations
             modelBuilder.Entity("LibraryAPI.Models.BookBorrowingRequest", b =>
                 {
                     b.Navigation("BorrowingRequestDetails");
+                });
+
+            modelBuilder.Entity("LibraryAPI.Models.User", b =>
+                {
+                    b.Navigation("BookBorrowingRequests");
                 });
 #pragma warning restore 612, 618
         }

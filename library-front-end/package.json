@@ -2,13 +2,14 @@
   "name": "library-front-end",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://localhost:5001/api",
+ 
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "^5.0.2",
+    "cors": "^2.8.5",
     "formik": "^2.2.9",
     "query-string": "^7.0.1",
     "react": "^17.0.2",

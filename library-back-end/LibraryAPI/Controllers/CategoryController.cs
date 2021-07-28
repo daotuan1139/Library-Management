@@ -16,50 +16,123 @@ namespace LibraryAPI.Controllers
     {
 
         private ICategoryService _categoryService;
-
+        private IUserService _userService;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
+        public CategoryController(ICategoryService categoryService, IUserService userService ,ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
+            _userService = userService;
             _logger = logger;
         }
 
         [HttpGet("Category")]
-        public IEnumerable<Category> GetCategories()
+        public IActionResult GetCategories()
         {
-            return _categoryService.GetCategories();
+            var categoryList = _categoryService.GetCategories();
+            if (categoryList == null)
+            {
+                return BadRequest("Error Loading");
+            }
+            return Ok(categoryList);
         }
 
         [HttpPost("Category")]
-        public IActionResult AddAuthor(Category category)
+        public IActionResult CreateCategory(Category category)
         {
-            var add = _categoryService.CreateCategory(category);
-            if (add == null)
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
             {
-                return NotFound();
+                return Unauthorized();
             }
-            return Ok(add);
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (category != null)
+                    {
+                        _categoryService.CreateCategory(category);
+                        return Ok(category);
+                    }
+                    return BadRequest("Error adding category");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            };
         }
 
         [HttpPut("Category")]
-        public List<Category> UpdateAuthor(Category category)
+        public IActionResult EditCategory(Category category)
         {
-            var update = _categoryService.EditCategory(category);
-            return update;
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (category != null)
+                    {
+                        _categoryService.EditCategory(category);
+                        return Ok(category);
+                    }
+                    return BadRequest("Error editing category");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            }
         }
 
         [HttpGet("Category/{id}")]
-        public Category FindByIDAuthor(int id)
+        public IActionResult FindByID(int id)
         {
-            return _categoryService.FindByID(id);
+            var category = _categoryService.FindByID(id);
+            if (category != null)
+            {
+                return BadRequest("Not Found :" + id);
+            }
+            return Ok(category);
         }
 
         [HttpDelete("Category")]
-        public List<Category> IsDeleteAuthor(Category category)
+        public IActionResult DeleteCategory(Category category)
         {
-            var list = _categoryService.DeleteCategory(category);
-            return list;
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            string token = Request.Headers["token"];
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+             else
+            {
+                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
+                if (user.RoleAdmin == true)
+                {
+                    if (category != null)
+                    {
+                        _categoryService.DeleteCategory(category);
+                        return Ok(category);
+                    }
+                    return BadRequest("Error deleting category");
+                }
+                else
+                {
+                    return StatusCode(403);
+                }
+            }
         }
         
     }

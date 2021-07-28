@@ -5,14 +5,11 @@ using System.Collections.Generic;
 using System.Collections;
 namespace LibraryAPI.Models
 {
-
-    [Table("BookBorrowingRequest")]
-    public class BookBorrowingRequest
+    public class BookBorrowingRequestDTO
     {
         [Key]
         public int BookBorrowingRequestID { get; set; }
         public int UserID {get; set;}
-        public User User {get; set;}
 
         public DateTime DateRequest { get; set; }
 
@@ -20,6 +17,5 @@ namespace LibraryAPI.Models
 
         public string AdminApproved { get; set; }
 
-        public ICollection<BookBorrowingRequestDetail> BorrowingRequestDetails { get; set; }
     }
 }

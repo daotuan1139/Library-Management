@@ -1,0 +1,23 @@
+.table {
+    font-family: arial,sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    border: 1px solid black;
+}
+.thead {
+    border: 1px solid black;
+    display: table-header-group;
+
+    vertical-align: middle;
+    border-color: inherit;
+}
+.tbody {
+    border: 1px solid black;
+
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+.table,tr, th, td {
+    border: 1px solid black;
+}
