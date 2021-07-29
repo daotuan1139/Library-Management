@@ -20,7 +20,7 @@ namespace LibraryAPI
 {
     public class Startup
     {
-        private readonly string MyAllowSpecificOrigins = "";
+        private readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -67,7 +67,6 @@ namespace LibraryAPI
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LibraryAPI v1"));
             }
 
-
             app.UseHttpsRedirection();
 
             app.UseRouting();
@@ -75,6 +74,8 @@ namespace LibraryAPI
             app.UseCors(MyAllowSpecificOrigins);
 
             app.UseAuthorization();
+
+
 
             app.UseEndpoints(endpoints =>
             {

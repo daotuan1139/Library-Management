@@ -1,5 +1,8 @@
-import React,{ createContext } from 'react';
+import React, { createContext } from 'react';
 
-const UserContext = createContext({});
- 
+const UserContext = createContext({
+    email: null,
+    password: null,
+});
+
 export default UserContext;

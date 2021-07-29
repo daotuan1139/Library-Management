@@ -25,7 +25,7 @@ namespace LibraryAPI.Controllers
         }
 
         [HttpGet("User")]
-        public IActionResult  GetUsers()
+        public IActionResult GetUsers()
         {
             var users = _userService.GetUsers().ToList();
 
@@ -40,14 +40,26 @@ namespace LibraryAPI.Controllers
         public IActionResult Login(User user)
         {
             var userLogin = _userService.GetUsers().SingleOrDefault(u => u.UserEmail == user.UserEmail && u.UserPassword == user.UserPassword);
-
+            Response.Headers.Add("token", "token");
             if (userLogin != null)
             {
+
                 return Ok(userLogin);
             }
 
             return BadRequest("Wrong user name or password");
         }
-        
+
+        [HttpGet("User/{id}")]
+        public IActionResult GetUser(int id)
+        {
+            var user = _userService.FindByID(id);
+            if (user == null)
+            {
+                return BadRequest("Not Found :" + id);
+            }
+            return Ok(user);
+        }
+
     }
 }

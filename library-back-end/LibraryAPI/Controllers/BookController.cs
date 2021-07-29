@@ -15,13 +15,11 @@ namespace LibraryAPI.Controllers
     public class BookController : ControllerBase
     {
         private IBookService _bookService;
-        private IUserService _userService;
         private readonly ILogger<BookController> _logger;
 
-        public BookController(IBookService bookService,IUserService userService ,ILogger<BookController> logger)
+        public BookController(IBookService bookService, ILogger<BookController> logger)
         {
             _bookService = bookService;
-            _userService = userService;
             _logger = logger;
         }
 
@@ -36,33 +34,19 @@ namespace LibraryAPI.Controllers
             return Ok(bookList);
         }
 
+
         [HttpPost("Book")]
         public IActionResult AddBook(BookDTO book)
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var addBook = _bookService.CreateBook(book);
+            if (addBook != null)
             {
-                return Unauthorized();
+                return Ok(addBook);
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (book != null)
-                    {
-                        _bookService.CreateBook(book);
-                        return Ok(book);
-                    }
-                    return BadRequest("Error adding book");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return BadRequest("Error adding book");
+
         }
 
         [HttpPut("Book")]
@@ -70,35 +54,19 @@ namespace LibraryAPI.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var editBook = _bookService.EditBook(book);
+            if (editBook != null)
             {
-                return Unauthorized();
+                return Ok(editBook);
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (book != null)
-                    {
-                        _bookService.EditBook(book);
-                        return Ok(book);
-                    }
-                    return BadRequest("Error editing book");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return BadRequest("Error adding book");
         }
 
         [HttpGet("Book/{id}")]
         public IActionResult FindByIDBook(int id)
         {
             var book = _bookService.FindByID(id);
-            if (book != null)
+            if (book == null)
             {
                 return BadRequest("Not Found :" + id);
             }
@@ -108,31 +76,13 @@ namespace LibraryAPI.Controllers
         [HttpDelete("Book")]
         public IActionResult DeleteBook(BookDTO book)
         {
-            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
-
-            string token = Request.Headers["token"];
-            if (token == null)
+            var deleteBook = _bookService.DeleteBook(book);
+            if (deleteBook == null)
             {
-                return Unauthorized();
+                return BadRequest("Error deleting book" );
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (book != null)
-                    {
-                        _bookService.EditBook(book);
-                        return Ok(book);
-                    }
-                    return BadRequest("Error deleting book");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return Ok(deleteBook);
         }
-        
+
     }
 }

@@ -9,7 +9,7 @@ const CategoryPage = () => {
 
     useEffect(() => {
 
-        callApi('Category','GET').then(response => {
+        callApi('Category', 'GET').then(response => {
             console.log('response', response);
             setCategories(response.data);
         })
@@ -19,6 +19,9 @@ const CategoryPage = () => {
     return (
         <div>
             <center>
+                <button style={{marginBottom: 20}}>
+                    Create
+                </button>
                 <table>
                     <thead>
                         <tr>
@@ -34,7 +37,7 @@ const CategoryPage = () => {
                                 <td>{category.categoryID}</td>
                                 <td>{category.categoryName}</td>
                                 <th>Update</th>
-                                <th>Delet</th>
+                                <th>Delete</th>
 
                             </tr>
                         ))}

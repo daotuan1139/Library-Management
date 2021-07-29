@@ -16,13 +16,11 @@ namespace LibraryAPI.Controllers
     {
 
         private ICategoryService _categoryService;
-        private IUserService _userService;
         private readonly ILogger<CategoryController> _logger;
 
-        public CategoryController(ICategoryService categoryService, IUserService userService ,ILogger<CategoryController> logger)
+        public CategoryController(ICategoryService categoryService, ILogger<CategoryController> logger)
         {
             _categoryService = categoryService;
-            _userService = userService;
             _logger = logger;
         }
 
@@ -42,28 +40,14 @@ namespace LibraryAPI.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var createCategory = _categoryService.CreateCategory(category);
+
+            if (createCategory != null)
             {
-                return Unauthorized();
+
+                return Ok(createCategory);
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (category != null)
-                    {
-                        _categoryService.CreateCategory(category);
-                        return Ok(category);
-                    }
-                    return BadRequest("Error adding category");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            };
+            return BadRequest("Error creating category");
         }
 
         [HttpPut("Category")]
@@ -71,28 +55,14 @@ namespace LibraryAPI.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var editCategory = _categoryService.EditCategory(category);
+
+            if (editCategory != null)
             {
-                return Unauthorized();
+
+                return Ok(editCategory);
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (category != null)
-                    {
-                        _categoryService.EditCategory(category);
-                        return Ok(category);
-                    }
-                    return BadRequest("Error editing category");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return BadRequest("Error editing category");
         }
 
         [HttpGet("Category/{id}")]
@@ -111,29 +81,17 @@ namespace LibraryAPI.Controllers
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var deleteCategory = _categoryService.DeleteCategory(category);
+
+            if (deleteCategory != null)
             {
-                return Unauthorized();
+
+                return Ok(deleteCategory);
             }
-             else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (category != null)
-                    {
-                        _categoryService.DeleteCategory(category);
-                        return Ok(category);
-                    }
-                    return BadRequest("Error deleting category");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return BadRequest("Error deleting category");
+
+
         }
-        
+
     }
 }

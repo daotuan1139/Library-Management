@@ -15,13 +15,11 @@ namespace LibraryAPI.Controllers
     public class BookBorrowingRequestController : ControllerBase
     {
         private IBookBorrowingRequestService _requestService;
-        private IUserService _userService;
         private readonly ILogger<BookBorrowingRequestController> _logger;
 
-        public BookBorrowingRequestController(IBookBorrowingRequestService requestService,IUserService userService, ILogger<BookBorrowingRequestController> logger)
+        public BookBorrowingRequestController(IBookBorrowingRequestService requestService, ILogger<BookBorrowingRequestController> logger)
         {
             _requestService = requestService;
-            _userService = userService;
             _logger = logger;
         }
 
@@ -36,33 +34,34 @@ namespace LibraryAPI.Controllers
             return Ok(requestList);
         }
 
+        [HttpPost("Request")]
+        public IActionResult CreateRequest(BookBorrowingRequestDTO request)
+        {
+            if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
+
+            var createRequest = _requestService.CreateRequest(request);
+
+            if (createRequest != null)
+            {
+                return Ok(createRequest);
+            }
+            return BadRequest("Error creating request");
+
+        }
+
         [HttpPut("Request")]
         public IActionResult UpdateRequest(BookBorrowingRequestDTO request)
         {
             if (!ModelState.IsValid) return BadRequest("Error: Model Invalid");
 
-            string token = Request.Headers["token"];
-            if (token == null)
+            var editRequest = _requestService.EditBookBorrowingRequest(request);
+
+            if (editRequest != null)
             {
-                return Unauthorized();
+                return Ok(editRequest);
             }
-            else
-            {
-                var user = _userService.GetUsers().SingleOrDefault(u => u.UserID == int.Parse(token));
-                if (user.RoleAdmin == true)
-                {
-                    if (request != null)
-                    {
-                        _requestService.EditBookBorrowingRequest(request);
-                        return Ok(request);
-                    }
-                    return BadRequest("Error editing request");
-                }
-                else
-                {
-                    return StatusCode(403);
-                }
-            }
+            return BadRequest("Error editing request");
+
         }
 
         [HttpGet("Request/{id}")]

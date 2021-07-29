@@ -1,43 +1,43 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
-import './BookList.css';
+import './BorrowedBookList.css';
 import callApi from '../../API/callAPI';
 
 
-const BookPage = () => {
+const BorrowedBookPage = () => {
 
-    const [books, setBooks] = useState([]);
+    const [requests, setRequests] = useState([]);
 
     useEffect(() => {
 
-        callApi('Book', 'GET').then(response => {
+        callApi('Request','GET').then(response => {
             console.log('response', response);
-            setBooks(response.data);
+            setRequests(response.data);
         })
     }, []);
 
     return (
         <div>
             <center>
-                <button style={{ marginBottom: 20 }}>
-                    <Link to={`/createBook`}> Create </Link>
-                </button>
                 <table>
-        
                     <thead>
                         <tr>
-                            <th>Book ID </th>
-                            <th>Book Name</th>
+                            <th>Book Borroed ID </th>
+                            <th>User Borroed ID</th>
+                            <th>Date Request</th>
+                            <th>Status </th>
+                            <th>Admin Approved </th>
                             <th></th>
                             <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        {books.map(book => (
+                        {requests.map(book => (
                             <tr key={book.bookID}>
                                 <td>{book.bookID}</td>
-                                <td>{book.bookName}</td>
+                                <td>{book.userID}</td>
+                                <td>{book.dateRequest}</td>
+                                <td>{book.status}</td>
+                                <td>{book.adminApproved}</td>
                                 <th>Update</th>
                                 <th>Delete</th>
                             </tr>
@@ -49,4 +49,4 @@ const BookPage = () => {
         </div>
     );
 };
-export default BookPage;
+export default BorrowedBookPage;

@@ -16,6 +16,13 @@ namespace LibraryAPI.Services
             _libraryContext = libraryContext;
         }
 
+        public User FindByID(int id)
+        {
+            var existingUser = _libraryContext.Users.Find(id);
+
+            return existingUser;
+        }
+
         //CRUD
         public IEnumerable<User> GetUsers()
         {

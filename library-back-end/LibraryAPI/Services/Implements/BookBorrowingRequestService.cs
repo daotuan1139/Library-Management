@@ -16,6 +16,30 @@ namespace LibraryAPI.Services
             _libraryContext = libraryContext;
         }
 
+        public BookBorrowingRequest CreateRequest(BookBorrowingRequestDTO request)
+        {
+            using var transaction = _libraryContext.Database.BeginTransaction();
+            try
+            {
+                var newRequest = new BookBorrowingRequest
+                {
+                    UserID = request.UserID,
+                    AdminApproved = request.AdminApproved,
+                    DateRequest = request.DateRequest,
+                    Status = request.Status,
+                };
+                _libraryContext.BookBorrowingRequests.Add(newRequest);
+                _libraryContext.SaveChanges();
+                transaction.Commit();
+                
+                return newRequest;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
         //CRUD
         public List<BookBorrowingRequest> EditBookBorrowingRequest(BookBorrowingRequestDTO request)
         {

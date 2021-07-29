@@ -30,12 +30,14 @@ namespace LibraryAPI.Services
         interface IBookBorrowingRequestService{
 
             IEnumerable<BookBorrowingRequest> GetBookBorrowingRequest();
+            BookBorrowingRequest CreateRequest(BookBorrowingRequestDTO request);
             List<BookBorrowingRequest> EditBookBorrowingRequest(BookBorrowingRequestDTO request);
             BookBorrowingRequest FindByID(int id);
         }
 
         interface IUserService{
             IEnumerable<User> GetUsers();
+            User FindByID(int id);
         }
 
     }

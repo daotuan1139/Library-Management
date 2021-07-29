@@ -10,7 +10,7 @@ const listyle = {
     margin: 45,
     display: 'inline-block'
 }
-const Navbar = () => {
+const Navbar = ({ isUserLoggedIn, logout }) => {
     return (
         <div>
             <center>
@@ -28,7 +28,21 @@ const Navbar = () => {
                         <Link to="/borrowed">Borrowed book page</Link>
                     </li>
                     <li style={listyle}>
-                        <Link to="/login">Login page</Link>
+                        {!isUserLoggedIn && (
+                            <Link to="/login">Login page</Link>
+                        )}
+                        {isUserLoggedIn && (
+                            <div>
+                                <Button style={{ paddingBottom: 0, paddingTop: 0 }} className="btn-primary" onClick={() => {
+                                    logout();
+                                    axios.defaults.headers.common['Authorization'] = '';
+                                }}
+                                >
+                                    Logout
+                                </Button>
+                                <Redirect to='/' />
+                            </div>
+                        )}
                     </li>
                 </ul>
             </center>

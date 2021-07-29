@@ -1,12 +1,14 @@
 import axios from 'axios';
-import * as Config from './../Constant/Config';
 
-export default function callApi(endpoint, method = 'GET'){
+let API_URL = 'https://localhost:5001/api';
+
+export default function callApi(endpoint, method , body){
     return axios({
         method: method,
-        url: `${Config.API_URL}/${endpoint}`,
+        url: `${API_URL}/${endpoint}`,
+        data: body,
 
-    }).catch(err => {
-        console.log(err);
+    }).catch(error => {
+        console.log(error);
     });
 };
