@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import './BookList.css';
@@ -38,8 +37,8 @@ const BookPage = () => {
                             <tr key={book.bookID}>
                                 <td>{book.bookID}</td>
                                 <td>{book.bookName}</td>
-                                <th>Update</th>
-                                <th>Delete</th>
+                                <th><Link to={`/editBook/${book.bookID}`}> Update </Link></th>
+                                <th><Link to={`/deleteBook/${book.bookID}`}> Delete </Link></th>
                             </tr>
                         ))}
                     </tbody>

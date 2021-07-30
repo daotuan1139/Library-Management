@@ -2,6 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import './CategoryList.css';
 import callApi from '../../API/callAPI';
+import { Link } from "react-router-dom";
 
 const CategoryPage = () => {
 
@@ -36,8 +37,8 @@ const CategoryPage = () => {
                             <tr key={category.categoryID}>
                                 <td>{category.categoryID}</td>
                                 <td>{category.categoryName}</td>
-                                <th>Update</th>
-                                <th>Delete</th>
+                                <th><Link to={`/editCategory/${category.categoryID}`}> Update </Link></th>
+                                <th><Link to={`/deleteCategory/${category.categoryID}`}> Delete </Link></th>
 
                             </tr>
                         ))}

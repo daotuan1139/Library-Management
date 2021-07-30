@@ -33,6 +33,7 @@ const HomePage = ({ currentUser }) => {
                 <Home 
                     name= {user.userName}
                     email = {user.userEmail}
+                    roleAdmin = {user.roleAdmin}
                     address = '1381 Giai Phong'
                 />
             </center>

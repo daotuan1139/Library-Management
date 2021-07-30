@@ -5,6 +5,11 @@ import CategoryPage from "../Pages/CategoryPage/CategoryPage.js";
 import LoginPage from "../Pages/LoginPage/LoginPage";
 import BorrowedBookPage from "../Pages/BorrowedBookPage/BorrowedBookPage";
 import CreateBook from "../Pages/BookPage/CreateBook";
+import EditBook from "../Pages/BookPage/EditBook";
+import DeleteBook from "../Pages/BookPage/DeleteBook";
+import CreateCategory from "../Pages/CategoryPage/CreateCategory";
+import EditCategory from "../Pages/CategoryPage/EditCategory";
+import DeleteCategory from "../Pages/CategoryPage/DeleteCategory";
 
 import React,{ useState } from "react";
 import { Switch, Route } from "react-router-dom";
@@ -38,13 +43,32 @@ function App() {
         <Route path="/category" exact>
           <CategoryPage />
         </Route>
+        <Route path="/createCategory" exact>
+          <CreateCategory />
+        </Route>
+
+        <Route path="/editCategory/:ID" exact>
+          <EditCategory />
+        </Route>
+
+        <Route path="/deleteCategory/:ID" exact>
+          <DeleteCategory />
+        </Route>
 
         <Route path="/book" exact>
           <BookPage />
         </Route>
 
-        <Route path="/createBook">
+        <Route path="/createBook" exact>
           <CreateBook />
+        </Route>
+
+        <Route path="/editBook/:ID" exact>
+          <EditBook />
+        </Route>
+
+        <Route path="/deleteBook/:ID" exact>
+          <DeleteBook />
         </Route>
 
         <Route

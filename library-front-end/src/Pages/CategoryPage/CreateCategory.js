@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import './BookList.css';
+import './categoryList.css';
 import { POST_ADD } from '../../API/callAPI';
 import { Redirect } from 'react-router-dom';
 
-const CreateBook = () => {
+const CreateCategory = () => {
 
     const [checkAdd, setCheckAdd] = useState(false);
-    const [bookName, setBookName] = useState(null);
+    const [categoryName, setCategoryName] = useState(null);
 
 
-    const handleChangeBookName = (event) => {
-        setBookName(event.target.value)
+    const handleChangeCategoryName = (event) => {
+        setCategoryName(event.target.value)
     }
 
     const handleCreate = (event) => {
         event.preventDefault();
 
-        if (bookName !== "") {
-            let newBook = {
-                bookName: bookName,
+        if (categoryName !== "") {
+            let newCategory = {
+                categoryName: categoryName,
             }
-            POST_ADD(`Book`, newBook).then(item => {
-                setBookName(item.data);
+            POST_ADD(`category`, newCategory).then(item => {
+                setCategoryName(item.data);
                 setCheckAdd(true);
                 alert("Create success");
             })
@@ -31,7 +31,7 @@ const CreateBook = () => {
         }
     }
     if(checkAdd){
-        return <Redirect to="/book" />
+        return <Redirect to="/category" />
     }
 
     return (
@@ -41,8 +41,8 @@ const CreateBook = () => {
                 <br />
                 <table>
                     <tr>
-                        <th>Book name </th>
-                        <th><input type="text" onChange={handleChangeBookName} name="bookName" /></th>
+                        <th>Category name </th>
+                        <th><input type="text" onChange={handleChangeCategoryName} name="categoryName" /></th>
                     </tr>
                 </table>
                 <br />
@@ -52,4 +52,4 @@ const CreateBook = () => {
     );
 }
 
-export default CreateBook;
+export default CreateCategory;
